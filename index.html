@@ -19,10 +19,13 @@
   header {
     background: #fff;
     border-bottom: 1px solid #e8e8e4;
-    padding: 0 24px;
     display: flex;
-    align-items: stretch;
-    gap: 0;
+    flex-direction: column;
+  }
+
+  .header-top {
+    padding: 12px 20px 10px;
+    border-bottom: 1px solid #e8e8e4;
   }
 
   .header-title {
@@ -31,9 +34,6 @@
     color: #1a1a1a;
     display: flex;
     align-items: center;
-    padding-right: 24px;
-    border-right: 1px solid #e8e8e4;
-    margin-right: 8px;
     letter-spacing: -0.01em;
   }
 
@@ -47,14 +47,15 @@
   nav {
     display: flex;
     align-items: stretch;
-    gap: 0;
   }
 
   .tab {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 0 20px;
+    justify-content: center;
+    gap: 7px;
+    flex: 1;
+    padding: 0 16px;
     font-size: 14px;
     font-weight: 500;
     color: #888;
@@ -62,7 +63,7 @@
     border-bottom: 2px solid transparent;
     transition: color 0.15s, border-color 0.15s;
     user-select: none;
-    height: 52px;
+    height: 44px;
   }
 
   .tab:hover { color: #1a1a1a; }
@@ -73,8 +74,8 @@
   }
 
   .tab-icon {
-    width: 18px;
-    height: 18px;
+    width: 17px;
+    height: 17px;
     flex-shrink: 0;
   }
 
@@ -86,14 +87,30 @@
     letter-spacing: 0.02em;
   }
 
-  .badge-green {
-    background: #e6f4ea;
-    color: #1e7e34;
-  }
+  .badge-green { background: #e6f4ea; color: #1e7e34; }
+  .badge-blue  { background: #e8f0fe; color: #1558d6; }
 
-  .badge-blue {
-    background: #e8f0fe;
-    color: #1558d6;
+  /* 데스크탑: 가로 배치 */
+  @media (min-width: 520px) {
+    header {
+      flex-direction: row;
+      align-items: stretch;
+      padding: 0 24px;
+    }
+    .header-top {
+      padding: 0 20px 0 0;
+      border-bottom: none;
+      border-right: 1px solid #e8e8e4;
+      margin-right: 4px;
+      display: flex;
+      align-items: center;
+    }
+    nav { flex: 1; }
+    .tab {
+      flex: none;
+      justify-content: flex-start;
+      height: 52px;
+    }
   }
 
   main {
@@ -108,14 +125,12 @@
     flex-direction: column;
   }
 
-  .panel.active {
-    display: flex;
-  }
+  .panel.active { display: flex; }
 
   .panel-bar {
     background: #fff;
     border-bottom: 1px solid #e8e8e4;
-    padding: 10px 24px;
+    padding: 8px 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -135,11 +150,12 @@
     border-radius: 50%;
     background: #4caf50;
     animation: pulse 2s infinite;
+    flex-shrink: 0;
   }
 
   @keyframes pulse {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
+    50%       { opacity: 0.4; }
   }
 
   .open-link {
@@ -153,35 +169,37 @@
     border: 1px solid #e8e8e4;
     border-radius: 6px;
     transition: background 0.12s, color 0.12s;
+    white-space: nowrap;
   }
 
-  .open-link:hover {
-    background: #f5f5f3;
-    color: #444;
-  }
+  .open-link:hover { background: #f5f5f3; color: #444; }
+  .open-link svg { width: 12px; height: 12px; }
 
-  .open-link svg {
-    width: 12px;
-    height: 12px;
+  /* 모바일에서 "새 탭에서 열기" 텍스트 숨기고 아이콘만 */
+  .open-link-text { display: none; }
+  @media (min-width: 400px) {
+    .open-link-text { display: inline; }
   }
 
   iframe {
     flex: 1;
     border: none;
     width: 100%;
-    min-height: calc(100vh - 105px);
+    min-height: calc(100vh - 120px);
   }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="header-title">
-    해랑달
-    <span>상점 열람</span>
+  <div class="header-top">
+    <div class="header-title">
+      해랑달
+      <span>상점 열람</span>
+    </div>
   </div>
   <nav>
-    <div class="tab active" onclick="switchTab('sheet')">
+    <div class="tab active" onclick="switchTab('sheet', this)">
       <svg class="tab-icon" viewBox="0 0 24 24" fill="none">
         <rect x="3" y="3" width="18" height="18" rx="2" stroke="#34A853" stroke-width="1.5"/>
         <line x1="3" y1="9" x2="21" y2="9" stroke="#34A853" stroke-width="1.2"/>
@@ -192,7 +210,7 @@
       상점현황
       <span class="badge badge-green">시트</span>
     </div>
-    <div class="tab" onclick="switchTab('doc')">
+    <div class="tab" onclick="switchTab('doc', this)">
       <svg class="tab-icon" viewBox="0 0 24 24" fill="none">
         <rect x="4" y="2" width="16" height="20" rx="2" stroke="#4285F4" stroke-width="1.5"/>
         <line x1="8" y1="8" x2="16" y2="8" stroke="#4285F4" stroke-width="1.3"/>
@@ -213,7 +231,7 @@
         실시간 연동 · Google Sheets
       </div>
       <a class="open-link" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQfy1BOePoxCpwp5i7XQZifW5XVYgAvDBd7t1aFM6cXsv96EJMnAs6ILdpEJaW-nPpLd1J2FWgN-zYR/pubhtml" target="_blank">
-        새 탭에서 열기
+        <span class="open-link-text">새 탭에서 열기</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
           <polyline points="15 3 21 3 21 9"/>
@@ -234,7 +252,7 @@
         실시간 연동 · Google Docs
       </div>
       <a class="open-link" href="https://docs.google.com/document/d/e/2PACX-1vSp93LA5WhIFGxrax_hfa8Z5MZpB_8VVfOr7_j1d_RozGzNm1maPgDL-64JhmBLKutAGfkeX6XL-Lfc/pub" target="_blank">
-        새 탭에서 열기
+        <span class="open-link-text">새 탭에서 열기</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
           <polyline points="15 3 21 3 21 9"/>
@@ -250,10 +268,10 @@
 </main>
 
 <script>
-  function switchTab(target) {
+  function switchTab(target, el) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    event.currentTarget.classList.add('active');
+    el.classList.add('active');
     document.getElementById('panel-' + target).classList.add('active');
   }
 </script>
